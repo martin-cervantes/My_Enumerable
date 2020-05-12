@@ -12,9 +12,22 @@ module Enumerable
     result = ''
 
     if block_given?
-      entry.length.times { |i| yield(i, entry[i]) }
+      entry.length.times { |i| yield(entry[i]) }
     else
       result = entry.to_enum
+    end
+
+    !result.is_a?(Enumerator) ? entry : result
+  end
+
+  def my_each_with_index
+    entry = is_a?(Range) ? to_a : self
+    result = ''
+
+    if block_given?
+      entry.length.times { |i| yield(i, entry[i]) }
+    else
+      result = entry.to_enum :each_with_index
     end
 
     !result.is_a?(Enumerator) ? entry : result
@@ -33,7 +46,7 @@ words = %w[dog door rod blade]
 
 # my_each
 
-p 'my_each'
+p '* * * * * * *       my_each       * * * * * * *'
 
 test_array1.my_each { |x| p x }
 
@@ -54,3 +67,9 @@ block = proc { |num| my_each_output += num.to_s }
 array.my_each(&block)
 
 p my_each_output
+
+p '* * * * *     my_each_with_index     * * * * *'
+
+test_array1.my_each_with_index { |x, y| p "item[#{x}] -> #{y}" }
+
+p test_array2.my_each_with_index

@@ -9,28 +9,34 @@
 module Enumerable
   def my_each
     entry = is_a?(Range) ? to_a : self
-    result = ''
 
     if block_given?
       entry.length.times { |i| yield(entry[i]) }
     else
-      result = entry.to_enum
+      entry.to_enum
     end
-
-    !result.is_a?(Enumerator) ? entry : result
   end
 
   def my_each_with_index
     entry = is_a?(Range) ? to_a : self
-    result = ''
 
     if block_given?
       entry.length.times { |i| yield(i, entry[i]) }
     else
-      result = entry.to_enum :each_with_index
+      entry.to_enum :each_with_index
     end
+  end
 
-    !result.is_a?(Enumerator) ? entry : result
+  def my_select
+    entry = is_a?(Range) ? to_a : self
+    output = []
+
+    if block_given?
+      my_each { |i| (yield i) == true ? output << i : output }
+      output
+    else
+      entry.to_enum :select
+    end
   end
 end
 
@@ -73,3 +79,17 @@ p '* * * * *     my_each_with_index     * * * * *'
 test_array1.my_each_with_index { |x, y| p "item[#{x}] -> #{y}" }
 
 p test_array2.my_each_with_index
+
+p '* * * * * * *       my_select       * * * * * * *'
+
+p test_array1.my_select(&:even?)
+
+p test_array2.my_select { |x| x == 'c' }
+
+p [1, 2, 3, 4, 5].my_select { |num| num.even? }
+
+p [1, 2, 3, 4, 5].my_select { |num| num.odd? }
+
+p [1, 2, 3, 4, 5].my_select { |num| num > 4 }
+
+p test_array2.my_select

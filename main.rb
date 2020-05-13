@@ -38,6 +38,21 @@ module Enumerable
       entry.to_enum :select
     end
   end
+
+  def my_count(arg = nil)
+    entry = is_a?(Range) ? to_a : self
+    count = 0
+
+    if block_given?
+      my_each { |i| count += 1 if yield(i) }
+    elsif arg
+      my_each { |i| count += 1 if i == arg }
+    else
+      count = entry.length
+    end
+
+    count
+  end
 end
 
 test_array1 = [11, 2, 3, 56]
@@ -93,3 +108,15 @@ p [1, 2, 3, 4, 5].my_select { |num| num.odd? }
 p [1, 2, 3, 4, 5].my_select { |num| num > 4 }
 
 p test_array2.my_select
+
+p '* * * * * * *       my_count       * * * * * * *'
+
+ary = [1, 2, 4, 2]
+
+p ary.my_count #=> 4
+
+p ary.my_count(9) #=> 0
+
+p ary.my_count(2) #=> 2
+
+p ary.my_count(&:even?) #=> 3

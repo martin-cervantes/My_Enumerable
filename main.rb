@@ -139,6 +139,41 @@ module Enumerable
 
     !result.is_a?(Enumerator) ? output : result
   end
+
+  def my_inject(*args, &proc)
+    entry = is_a?(Range) ? to_a : self
+    result = 0
+
+    if entry[0].is_a?(Integer)
+      if block_given?
+        if args.size.zero?
+          entry.my_each { |i| result = yield(result, i) }
+        elsif args.size == 1
+          result = args[0].to_i
+          entry.my_each { |i| result = yield(result, i) }
+        end
+      else
+        if args.size == 1
+          op = args[0].to_s
+          case op
+          when '*'
+            result = 1
+          when '+'
+            result = 0
+          end
+          entry.my_each { |i| result = result.to_i.send(op, i) }
+        elsif args.size == 2
+          op = args[1].to_s
+          result = args[0].to_i
+          entry.my_each { |i| result = result.to_i.send(op, i) }
+        end
+      end
+    else
+      entry.my_each { |i| result = proc.call(result.to_s, i.to_s) }
+    end
+
+    result
+  end
 end
 
 test_array1 = [11, 2, 3, 56]
@@ -302,3 +337,23 @@ myMapP = Proc.new { |x| x * 2 }
 p arr.my_map (myMapP) { |x| x * x}
 
 p array.my_map
+
+p '* * * * * * *       my_inject       * * * * * * *'
+
+p (5..10).my_inject(:+)
+
+p (5..10).my_inject { |sum, n| sum + n }
+
+p (5..10).my_inject(1, :*)
+
+p (5..10).my_inject(1) { |product, n| product * n }
+
+search = proc { |memo, word| memo.length > word.length ? memo : word }
+
+p ['hello','strong','am'].my_inject(&search)
+
+def multiply_els(arg)
+  arg.my_inject(1, :*)
+end
+
+p multiply_els([2, 4, 5])

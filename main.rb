@@ -53,6 +53,21 @@ module Enumerable
 
     count
   end
+
+  def my_map(proc = nil)
+    entry = is_a?(Range) ? to_a : self
+    output = []
+
+    if !proc.nil?
+      entry.my_each { |i| output << proc.call(i) }
+    elsif block_given?
+      entry.my_each { |i| output << yield(i) }
+    else
+      result = entry.to_enum :map
+    end
+
+    !result.is_a?(Enumerator) ? output : result
+  end
 end
 
 test_array1 = [11, 2, 3, 56]
@@ -120,3 +135,21 @@ p ary.my_count(9) #=> 0
 p ary.my_count(2) #=> 2
 
 p ary.my_count(&:even?) #=> 3
+
+p '* * * * * * *       my_map       * * * * * * *'
+
+arr = [1, 2, 7, 4, 5]
+
+p arr.my_map { |x| x * x }
+
+p (1..2).my_map { |x| x * x }
+
+myMapP = Proc.new { |x| x * x }
+
+p arr.my_map (myMapP)
+
+myMapP = Proc.new { |x| x * 2 }
+
+p arr.my_map (myMapP) { |x| x * x}
+
+p array.my_map

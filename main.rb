@@ -86,6 +86,30 @@ module Enumerable
     result
   end
 
+  def my_none?(*args, &block)
+    entry = is_a?(Range) ? to_a : self
+    result = true
+
+    if entry.empty?
+      result = true
+    elsif !args[0].nil?
+      if args[0].is_a? Class
+        entry.my_each { |i| result = false if i.is_a?(args[0]) }
+      elsif args[0].is_a?(Regexp)
+        regex = entry.join(' ')
+        result = false if regex =~ args[0]
+      else
+        entry.my_each { |i| result = false if i == args[0] }
+      end
+    elsif !block.nil?
+      entry.my_each { |i| result = false if block.call(i) }
+    else
+      entry.my_each { |i| result = false if i }
+    end
+
+    result
+  end
+
   def my_count(arg = nil)
     entry = is_a?(Range) ? to_a : self
     count = 0
@@ -222,6 +246,32 @@ p [1, 1].my_any?(1)
 p false_array.my_any?
 
 p words.my_any?(/d/)
+
+p '* * * * * * *       my_none       * * * * * * *'
+
+p %w[ant bear cat].my_none?(/d/)
+
+p %w[ant bear cat].my_none? { |word| word.length == 5 }
+
+p %w[ant bear cat].my_none? { |word| word.length >= 4 }
+
+p [1, 3.14, 42].my_none?(Float)
+
+p [].my_none?
+
+p [nil].my_none?
+
+p [nil, false].my_none?
+
+p [nil, false, true].my_none?
+
+p [1, 2, 3].my_none?(1)
+
+p [1, 2, 3].my_none?(4)
+
+p [nil, false, nil, false].my_none?
+
+p words.my_none?(/d/)
 
 p '* * * * * * *       my_count       * * * * * * *'
 

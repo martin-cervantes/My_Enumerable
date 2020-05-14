@@ -45,10 +45,10 @@ module Enumerable
 
     if entry.empty?
       result = true
-    elsif !args[0].nil? && args[0].class == Class
-      entry.my_each { |i| result = false unless i.is_a?(args[0]) }
     elsif !args[0].nil?
-      if args[0].is_a?(Regexp)
+      if args[0].is_a? Class
+        entry.my_each { |i| result = false unless i.is_a?(args[0]) }
+      elsif args[0].is_a?(Regexp)
         entry.my_each { |i| result = false unless args[0].match(i) }
       else
         entry.my_each { |i| result = false unless i == args[0] }
@@ -57,6 +57,30 @@ module Enumerable
       entry.my_each { |i| result = false unless block.call(i) }
     else
       entry.my_each { |i| result = false unless i }
+    end
+
+    result
+  end
+
+  def my_any?(*args, &block)
+    entry = is_a?(Range) ? to_a : self
+    result = false
+
+    if entry.empty?
+      result = false
+    elsif !args[0].nil?
+      if args[0].is_a? Class
+        entry.my_each { |i| result = true if i.is_a?(args[0]) }
+      elsif args[0].is_a?(Regexp)
+        regex = entry.join(' ')
+        result = true if regex =~ args[0]
+      else
+        entry.my_each { |i| result = true if i == args[0] }
+      end
+    elsif !block.nil?
+      entry.my_each { |i| result = true if block.call(i) }
+    else
+      entry.my_each { |i| result = true if i }
     end
 
     result
@@ -170,6 +194,34 @@ p words.my_all?(/d/)
 p %w[ant bear cat].my_all?(/t/)
 
 p %w[ant tiger cat].my_all?(/t/)
+
+p '* * * * * * *       my_any       * * * * * * *'
+
+p %w[ant bear cat].my_any? { |word| word.length >= 3 }
+
+p %w[ant bear cat].my_any? { |word| word.length >= 4 }
+
+p %w[ant bear cat].my_any?(/d/)
+
+p [nil, true, 99].my_any?(Integer)
+
+p [nil, true, 99].my_any?
+
+p [].my_any?
+
+p [1, 2, 3, 's'].my_any?(String)
+
+p [1, 2, 3, 's'].my_any?(Numeric)
+
+p [1, 2, 3].my_any?(String)
+
+p [1, 2].my_any?(1)
+
+p [1, 1].my_any?(1)
+
+p false_array.my_any?
+
+p words.my_any?(/d/)
 
 p '* * * * * * *       my_count       * * * * * * *'
 

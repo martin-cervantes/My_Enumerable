@@ -39,6 +39,29 @@ module Enumerable
     end
   end
 
+  def my_all?(*args, &block)
+    entry = is_a?(Range) ? to_a : self
+    result = true
+
+    if entry.empty?
+      result = true
+    elsif !args[0].nil? && args[0].class == Class
+      entry.my_each { |i| result = false unless i.is_a?(args[0]) }
+    elsif !args[0].nil?
+      if args[0].is_a?(Regexp)
+        entry.my_each { |i| result = false unless args[0].match(i) }
+      else
+        entry.my_each { |i| result = false unless i == args[0] }
+      end
+    elsif !block.nil?
+      entry.my_each { |i| result = false unless block.call(i) }
+    else
+      entry.my_each { |i| result = false unless i }
+    end
+
+    result
+  end
+
   def my_count(arg = nil)
     entry = is_a?(Range) ? to_a : self
     count = 0
@@ -124,17 +147,41 @@ p [1, 2, 3, 4, 5].my_select { |num| num > 4 }
 
 p test_array2.my_select
 
+p '* * * * * * *       my_all       * * * * * * *'
+
+p (%w[ant bear cat]).my_all? { |word| word.length >= 3 }
+
+p (%w[ant bear cat]).my_all? { |word| word.length >= 4 }
+
+p %w[ant bear cat].my_all?(/t/)
+
+p [1, 2].my_all?(Numeric)
+
+p [1, 2].my_all?(String)
+
+p [1, 2].my_all?(1)
+
+p [1, 1].my_all?(1)
+
+p true_array.my_all?
+
+p words.my_all?(/d/)
+
+p %w[ant bear cat].my_all?(/t/)
+
+p %w[ant tiger cat].my_all?(/t/)
+
 p '* * * * * * *       my_count       * * * * * * *'
 
 ary = [1, 2, 4, 2]
 
-p ary.my_count #=> 4
+p ary.my_count
 
-p ary.my_count(9) #=> 0
+p ary.my_count(9)
 
-p ary.my_count(2) #=> 2
+p ary.my_count(2)
 
-p ary.my_count(&:even?) #=> 3
+p ary.my_count(&:even?)
 
 p '* * * * * * *       my_map       * * * * * * *'
 

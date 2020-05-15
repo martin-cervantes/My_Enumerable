@@ -1,32 +1,41 @@
-# Project Name
+# My Enumerable
 
-    Project brief description
-
-![screenshot](./screenshot.png)
+The Enumerable module in Ruby is an important part and they are part of the Core. Provides methods
+for working specifically with collections.
+The operation of some of the enumerable methods was replicated:
+- each
+- each_with_index
+- select
+- all?
+- any?
+- none?
+- count
+- map
+- inject
 
 ## :package: Built With
 
-    - Plain HTML5
-    - Pure CSS3
-    - Font Awesome
-
-## :mag: Live Demo
-
-[Live Demo Link](https://mcervantes71.github.io//index.html)
-
-## :computer: Getting Started
-
-    To get a local copy up and running follow these simple steps.
-
-### Install
-
-    Download the repository.
+- Ruby
+- Rubocop
 
 ### Usage
 
-    In any browser, open the index.html file.
+1) Clone the repository to your local machine
+```sh
+$ git clone https://github.com/mcervantes71/My_Enumerable.git
+```
 
-## :busts_in_silhouette: Authors
+2) cd into the directory
+```sh
+$ cd My_Enumerable
+```
+
+3) Load the module. Note: make sure to prepend the current path
+```ruby
+require "./main.rb"
+```
+
+## :busts_in_silhouette: Author
 
 👤 **Martin Cervantes**
 
@@ -37,13 +46,13 @@
 
 ## 🤝 Contributing
 
-    Contributions, issues and feature requests are welcome!
+Contributions, issues and feature requests are welcome!
 
 Feel free to check the [issues page](../../issues).
 
 ## :star2: Show your support
 
-    Give a ⭐️ if you like this project!
+Give a ⭐️ if you like this project!
 
 ## 📝 License
 

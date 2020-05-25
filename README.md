@@ -38,7 +38,7 @@ require "./main.rb"
 ### Testing
 [Pre-requisite] 
 ``` sh
-gem install rspec
+run bundle install
 ```
 
 1) cd into the directory

@@ -54,6 +54,10 @@ describe Enumerable do
     it 'Check my_all method with string array' do
       expect(integers_array.my_all?(String)).to eql(false)
     end
+
+    it 'Check my_all method with Regex' do
+      expect(%w[ant bear cat].my_all?(/t/)).to eql(false)
+    end
   end
 
   describe '#my_any' do
@@ -64,6 +68,10 @@ describe Enumerable do
     it 'Check my_any method with string array' do
       expect(string_array.my_any?('a')).to eql(true)
     end
+
+    it 'Check my_any method with Regex' do
+      expect(%w[ant bear cat].my_any?(/t/)).to eql(true)
+    end
   end
 
   describe '#my_none' do
@@ -73,6 +81,10 @@ describe Enumerable do
 
     it 'Check my_none method with string array' do
       expect(string_array.my_none?('0')).to eql(true)
+    end
+
+    it 'Check my_none method with Regex' do
+      expect(%w[ant bear cat].my_none?(/t/)).to eql(false)
     end
   end
 

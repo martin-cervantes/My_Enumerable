@@ -35,6 +35,22 @@ $ cd My_Enumerable
 require "./main.rb"
 ```
 
+### Testing
+[Pre-requisite] 
+``` sh
+run bundle install
+```
+
+1) cd into the directory
+```sh
+$ cd My_Enumerable
+```
+
+2) Load the testing module
+```sh
+$ rspec
+```
+
 ## :busts_in_silhouette: Author
 
 👤 **Martin Cervantes**
